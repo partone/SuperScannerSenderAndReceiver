@@ -178,13 +178,13 @@ public class MyServer extends JFrame {
 		PrintWriter writer;
 		
 		try {
-			String filename = directory + "/z" + messageArray[messageArray.length - 1] + " - " + messageArray[0] + ".txt"; //Get last number
+			String filename = directory + "/" + messageArray[0] + " - " + messageArray[messageArray.length - 1] + ".txt"; //Get last number
 			writer = new PrintWriter(filename, "UTF-8");
 			for(int i = 1; i < messageArray.length - 1; i++) {	//Omit the last character since it's the zone
-				writer.println(messageArray[i] + "00000001");
+				writer.println(messageArray[i]);
 			}
 			writer.close();
-			receptionLog.setText(receptionLog.getText() + "[" + dateFormat.format(date) + "] Received z" + messageArray[messageArray.length - 1] + " from " + messageArray[0] + "\n");
+			receptionLog.setText(receptionLog.getText() + "[" + dateFormat.format(date) + "] Received " + messageArray[messageArray.length - 1] + " from " + messageArray[0] + "\n");
 			JScrollBar sb = scrollPane_1.getVerticalScrollBar();
 			sb.setValue( sb.getMaximum() + 1 );
 		} catch (FileNotFoundException e) {
