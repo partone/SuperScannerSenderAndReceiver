@@ -1,3 +1,9 @@
+/*
+
+Code by Eric Parton
+
+ */
+
 package com.example.partonbarcodescanner;
 
 import android.Manifest;
@@ -167,9 +173,9 @@ public class Scanner extends AppCompatActivity {
 
 
         //Add leading zero if ignored
-        if (scanPreResult.length() < 13) {
-            scanPreResult = "0" + scanPreResult;
-        }
+        //if (scanPreResult.length() < 13) {
+        //    scanPreResult = "0" + scanPreResult;
+        //}
         //Add scan result to shared pref
         final String scanResult = scanPreResult;
         setAndReturnBarcodeSharedPref(scanResult);

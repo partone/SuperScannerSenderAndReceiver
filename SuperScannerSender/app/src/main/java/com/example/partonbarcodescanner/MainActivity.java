@@ -1,3 +1,9 @@
+/*
+
+Code by Eric Parton
+
+ */
+
 package com.example.partonbarcodescanner;
 
 import android.content.Context;
@@ -121,10 +127,10 @@ public class MainActivity extends AppCompatActivity {
                             //Format message so that the txt is in the correct format
                             String[] messageArray = message.split("\\|");	//Split codes by this delimiter
                             for(int i = 1; i < messageArray.length - 1; i++) {	//Omit the last character since it's the zone
-                               messageFormatted += messageArray[i] + "00000001\n";
+                               messageFormatted += messageArray[i];
                             }
 
-                            writeFileOnInternalStorage(MainActivity.this, "z" + zone + " - " + sellerID + ".txt", messageFormatted);
+                            writeFileOnInternalStorage(MainActivity.this, sellerID + " - " + zone + ".txt", messageFormatted);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -158,24 +164,24 @@ public class MainActivity extends AppCompatActivity {
     public int validateData(String ip, String sellerID, String message, String zone){
         if(ip == "" || ip.isEmpty()){
             new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("No se envió")
-                    .setMessage("Ingresa el IP del servidor")
+                    .setTitle("Error")
+                    .setMessage("Enter a server IP")
                     .setNegativeButton(android.R.string.ok, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
                     return 0;
         } else if (sellerID == "" || sellerID.isEmpty()){
             new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("No se envió")
-                    .setMessage("Ingresa tu número de vendedor")
+                    .setTitle("Error")
+                    .setMessage("Enter a phone ID")
                     .setNegativeButton(android.R.string.ok, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
             return 0;
         } else if (zone == "" || zone.isEmpty()){
             new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("No se envió")
-                    .setMessage("Ingresa la zona")
+                    .setTitle("Error")
+                    .setMessage("Enter a batch ID")
                     .setNegativeButton(android.R.string.ok, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
@@ -279,9 +285,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_Text = input.getText().toString();
-                if (m_Text.length() < 13) {
-                    m_Text = "0" + m_Text;
-                }
                 e1.setText(setAndReturnBarcodeSharedPref(m_Text));
             }
         });

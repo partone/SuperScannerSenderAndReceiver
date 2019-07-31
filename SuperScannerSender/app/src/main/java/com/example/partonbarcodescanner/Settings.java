@@ -1,3 +1,9 @@
+/*
+
+Code by Eric Parton
+
+ */
+
 package com.example.partonbarcodescanner;
 
 import android.app.AlarmManager;
