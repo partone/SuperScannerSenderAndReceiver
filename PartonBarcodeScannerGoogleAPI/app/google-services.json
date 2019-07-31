@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1023398740218",
+    "firebase_url": "https://my-project-1559065463954.firebaseio.com",
+    "project_id": "my-project-1559065463954",
+    "storage_bucket": "my-project-1559065463954.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023398740218:android:6b01d4d6b85d5b17",
+        "android_client_info": {
+          "package_name": "com.example.partonbarcodescanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023398740218-0elai8j29rlh9sl9t0cl0seh464nbple.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.partonbarcodescanner",
+            "certificate_hash": "de1b16b4f08e83233d436ee489b20f1c7044fdd4"
+          }
+        },
+        {
+          "client_id": "1023398740218-vupnd492qmobbne24dgs7kdspj80b9ae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZtJhVJn0JDJZfrQSSrvc3y9qEwVlKQh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023398740218-vupnd492qmobbne24dgs7kdspj80b9ae.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
