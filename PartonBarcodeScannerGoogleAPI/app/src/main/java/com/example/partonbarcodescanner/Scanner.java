@@ -43,9 +43,6 @@ public class Scanner extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
 
-        //Check torch
-        Boolean torch = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getBoolean("TORCH", true);
-
         //Get the back button
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -74,21 +71,13 @@ public class Scanner extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Error setting up detector", Toast.LENGTH_LONG).show();        //Pray this never happens
         }
 
-        if(torch) { //TODO implement torch
-            cameraSource = new CameraSource.Builder(this, barcode)
-                    .setFacing(CameraSource.CAMERA_FACING_BACK)
-                    .setRequestedFps(24)
-                    .setRequestedPreviewSize(500, 500)  //Not sure what this does
-                    .setAutoFocusEnabled(true)
-                    .build();
-        } else {
-            cameraSource = new CameraSource.Builder(this, barcode)
-                    .setFacing(CameraSource.CAMERA_FACING_BACK)
-                    .setRequestedFps(24)
-                    .setRequestedPreviewSize(500, 500)  //Not sure what this does
-                    .setAutoFocusEnabled(true)
-                    .build();
-        }
+
+        cameraSource = new CameraSource.Builder(this, barcode)
+                .setFacing(CameraSource.CAMERA_FACING_BACK)
+                .setRequestedFps(24)
+                .setRequestedPreviewSize(500, 500)  //Not sure what this does
+                .setAutoFocusEnabled(true)
+                .build();
 
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
@@ -167,7 +156,7 @@ public class Scanner extends AppCompatActivity {
         save.setEnabled(false);     //Disable the button until the next scan
         erase.setEnabled(false);
         save.setBackgroundColor(Color.LTGRAY);
-        scannedCode.setText("Aquí aparecerá el código");
+        scannedCode.setText("The barcode will appear here");
     }
 
     //When the save button is pressed, save the barcode to shared prefs and get ready for a new scan
@@ -186,7 +175,7 @@ public class Scanner extends AppCompatActivity {
         setAndReturnBarcodeSharedPref(scanResult);
 
         save.setBackgroundColor(Color.LTGRAY);
-        scannedCode.setText("Aquí aparecerá el código");
+        scannedCode.setText("The barcode will appear here");
     }
 
     //Append to the barcode sharedpref barcode string and also returns it

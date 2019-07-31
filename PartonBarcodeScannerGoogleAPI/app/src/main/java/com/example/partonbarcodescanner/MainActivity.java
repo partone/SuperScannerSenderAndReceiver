@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         e2.setText(getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getString("ZONE", "420"));
         e1.setText(getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getString("BARCODES", ""));
         setTotalCount(e1.getText().toString());
-        if(e1.getText().toString() == "" || e1.getText().toString().isEmpty()) e1.setText("Aquí aparecerán los códigos escaneados");
+        if(e1.getText().toString() == "" || e1.getText().toString().isEmpty()) e1.setText("Scanned barcodes will appear here");
     }
 
     //Switch to settings
@@ -100,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Confirmation and send
         new AlertDialog.Builder(MainActivity.this)
-                .setTitle("Ya hablando en serio")
-                .setMessage("¿Estás seguro?")
+                .setTitle("You seem pretty determined")
+                .setMessage("Are you sure?")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String lines[] = message.split("\\r?\\n");   //Split them by new lines
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         //Clear the old barcodes from the sharedprefs and the textview
-                        e1.setText("Aquí aparecerán los códigos escaneados");
+                        e1.setText("Scanned barcodes will appear here");
                         //Get the shared prefs
                         SharedPreferences.Editor editor = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).edit();
                         //And erase them
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                         editor.putString("ZONE", "");
                         editor.apply();
 
-                        Toast.makeText(getApplicationContext(), "¡" + numberOfThings + " códigos enviados!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), numberOfThings + " codes sent!", Toast.LENGTH_LONG).show();
                         tt.setText("Total: 0");
                     }
                 })
@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
     //Add a barcode manually
     public void addManually(View v){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Ingresar código");
+        builder.setTitle("Enter code");
 
         // Set up the input
         final EditText input = new EditText(this);
@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
                 e1.setText(setAndReturnBarcodeSharedPref(m_Text));
             }
         });
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Clears all barcodes
     public void clearBarcodes (View v){
-        e1.setText("Aquí aparecerán los códigos escaneados");
+        e1.setText("Scanned barcodes will appear here");
         //Get the shared prefs
         SharedPreferences.Editor editor = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).edit();
         //And erase them

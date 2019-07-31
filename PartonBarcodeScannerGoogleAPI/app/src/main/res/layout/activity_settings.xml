@@ -26,15 +26,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:maxLength="3"
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:maxLength="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sellerID"
-        tools:text="EM7" />
+        tools:text="EMP" />
 
     <TextView
         android:id="@+id/serverIP"
@@ -43,7 +43,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
-        android:text="IP del servidor"
+        android:text="Server IP"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="Número de vendedor"
+        android:text="Phone ID"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ipEditText" />
 
@@ -65,10 +65,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:text="Guardar y regresar"
+        android:text="Save and Return"
         app:layout_constraintEnd_toStartOf="@+id/cancelBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/torch" />
+        app:layout_constraintTop_toBottomOf="@+id/sellerEditText" />
 
     <Button
         android:id="@+id/cancelBtn"
@@ -77,10 +77,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="Cancelar"
+        android:text="Cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/saveBtn"
-        app:layout_constraintTop_toBottomOf="@+id/torch" />
+        app:layout_constraintTop_toBottomOf="@+id/sellerEditText" />
 
     <Button
         android:id="@+id/button2"
@@ -89,20 +89,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:onClick="performTest"
-        android:text="Probar"
+        android:text="Test"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/serverIP" />
 
-    <Switch
-        android:id="@+id/torch"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="155dp"
-        android:text="Linterna durante escaneo"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sellerEditText" />
 </android.support.constraint.ConstraintLayout>

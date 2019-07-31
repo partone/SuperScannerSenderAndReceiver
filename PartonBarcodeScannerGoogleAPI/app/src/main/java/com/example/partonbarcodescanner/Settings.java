@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 public class Settings extends AppCompatActivity {
     EditText e1;
     EditText e2;
-    Switch torch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,13 +32,10 @@ public class Settings extends AppCompatActivity {
 
         e1 = (EditText) findViewById(R.id.ipEditText);
         e2 = (EditText) findViewById(R.id.sellerEditText);
-        torch = (Switch) findViewById(R.id.torch);
 
         //Bring up the old settings if available
         e1.setText(getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getString("SERVERIP", ""));
         e2.setText(getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getString("SELLERID", ""));
-        torch.setChecked(getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getBoolean("TORCH", true));
-        Log.i("Yeah1", String.valueOf(getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getBoolean("TORCH", true)));
 
         //Save
         Button clickButton = (Button) findViewById(R.id.saveBtn);
@@ -47,19 +43,17 @@ public class Settings extends AppCompatActivity {
             public void onClick(View v) {
 
                 SharedPreferences.Editor editor = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).edit();
-                Boolean tmp = torch.isChecked();
                 editor.putString("SERVERIP", e1.getText().toString());
                 editor.putString("SELLERID", e2.getText().toString().toUpperCase());
-                editor.putBoolean("TORCH", tmp);
                 editor.apply();
 
                 try {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Guardando...", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Saving...", Toast.LENGTH_SHORT);
                     TimeUnit.MILLISECONDS.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(getApplicationContext(), "Guardado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
                 //startActivity(new Intent(Settings.this, MainActivity.class));
                 //setContentView(R.layout.activity_main);
                 //Big bug was happening, this code basically restarts the whole app lol
