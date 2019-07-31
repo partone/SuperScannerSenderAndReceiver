@@ -1,0 +1,1 @@
+22 Apr 2019 13:27:13 GMT: Log 'EclipseCompiler.txt' opened: 22 Apr 2019 13:27:13 GMT with name C:\Users\eric.parton\eclipse-workspace\MyProject\src\test\EclipseCompiler.txt
