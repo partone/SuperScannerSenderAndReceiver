@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -30,6 +31,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
     //Socket stuff
@@ -79,9 +87,21 @@ public class MainActivity extends AppCompatActivity {
         e2 = (EditText) findViewById(R.id.zoneText);
         tt = (TextView) findViewById(R.id.totalText);
         e2.setText(getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getString("ZONE", "420"));
-        e1.setText(getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getString("BARCODES", ""));
-        setTotalCount(e1.getText().toString());
+        refreshBarcodeList();
+        setTotalCount(getBarcodeNumber());
         if(e1.getText().toString() == "" || e1.getText().toString().isEmpty()) e1.setText("Scanned barcodes will appear here");
+    }
+
+    public void refreshBarcodeList() {
+        e1.setText(getBarcodesAsString());
+    }
+
+    public int getBarcodeNumber() {
+        //Get the existing barcodes
+        SharedPreferences prefs = this.getSharedPreferences("BARCODESPREFS", MODE_PRIVATE);
+        String barcodeString = prefs.getString("BARCODESLISTPREFS", "");
+        List<String> barcodeSet = new ArrayList<>(Arrays.asList(TextUtils.split(barcodeString, ",")));
+        return barcodeSet.size();
     }
 
     //Switch to settings
@@ -92,12 +112,27 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, Settings.class));
     }
 
+    //Returns barcodes as a new line delimited string
+    public String getBarcodesAsString() {
+        //Get the existing barcodes
+        SharedPreferences prefs = this.getSharedPreferences("BARCODESPREFS", MODE_PRIVATE);
+        String barcodeString = prefs.getString("BARCODESLISTPREFS", "");
+        List<String> barcodeSet = new ArrayList<>(Arrays.asList(TextUtils.split(barcodeString, ",")));
+        Collections.reverse(barcodeSet);
+
+        String barcodes = TextUtils.join("\n", barcodeSet);
+        return barcodes;
+    }
+
     /****************Socket stuff****************/
     //Set the message text and run the execute method to send data
     public void send_text(View v) {
         ip = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getString("SERVERIP", "").trim();   //Get IP from sharedprefs if unchanged
         final String sellerID = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getString("SELLERID", "");
-        message = e1.getText().toString().trim();                  //Get the barcodes
+
+        //Get the barcodes
+        message = getBarcodesAsString();
+
         final String zone = e2.getText().toString().trim();
         //Validate data
         if(validateData(ip, sellerID, message, zone) == 0){
@@ -248,24 +283,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Append to the barcode sharedpref barcode string and also returns it, also set the total
-    private String setAndReturnBarcodeSharedPref(String scanResult){
-        e2.setText(getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getString("ZONE", ""));   //Set the zone for no real reason
-        String currentBarcodes = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getString("BARCODES", "");
-        currentBarcodes = currentBarcodes + scanResult + "\n";      //Append the new barcode
-        //Save the new string
-        SharedPreferences.Editor editor = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).edit();
-        editor.putString("BARCODES", currentBarcodes);
-        editor.apply();
-        setTotalCount(currentBarcodes);
-        return currentBarcodes;
+    //Append to the barcode sharedpref barcode list, also set the total
+    private void addToBarcodeSharedPref(String scanResult){
+        //Get the existing barcodes
+        SharedPreferences prefs = this.getSharedPreferences("BARCODESPREFS", MODE_PRIVATE);
+        String barcodeString = prefs.getString("BARCODESLISTPREFS", "");
+        List<String> barcodeSet;
+        barcodeSet = new ArrayList<>(Arrays.asList(TextUtils.split(barcodeString, ",")));
+
+        //Add the new one
+        barcodeSet.add(scanResult);
+        SharedPreferences.Editor edit=prefs.edit();
+
+        //Save them to shared prefs
+        edit.putString("BARCODESLISTPREFS", TextUtils.join(",", barcodeSet));
+        edit.commit();
+
+        //Update total codes
+        refreshBarcodeList();
+        setTotalCount(barcodeSet.size());
     }
 
     //Set the total number of scanned codes so far
-    private void setTotalCount (String currentBarcodes){
-        Log.i("Yeah", currentBarcodes);
-        String[] lines = currentBarcodes.split("\r\n|\r|\n");
-        tt.setText("Total: " + (lines.length));
+    private void setTotalCount (int setSize){
+        tt.setText("Total: " + setSize);
     }
 
     //Thanks StackOverflow
@@ -285,7 +326,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_Text = input.getText().toString();
-                e1.setText(setAndReturnBarcodeSharedPref(m_Text));
+                addToBarcodeSharedPref(m_Text);
+                refreshBarcodeList();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -300,38 +342,38 @@ public class MainActivity extends AppCompatActivity {
 
     //Clears all barcodes
     public void clearBarcodes (View v){
-        e1.setText("Scanned barcodes will appear here");
-        //Get the shared prefs
-        SharedPreferences.Editor editor = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).edit();
-        //And erase them
-        editor.putString("BARCODES", "");
-        editor.apply();
-        tt.setText("Total: 0");
+        SharedPreferences prefs = this.getSharedPreferences("BARCODESPREFS", MODE_PRIVATE);
+        SharedPreferences.Editor edit=prefs.edit();
+
+        //Save them to shared prefs
+        edit.putString("BARCODESLISTPREFS", "");
+        edit.commit();
+
+        //Update total codes
+        setTotalCount(0);
+
+        refreshBarcodeList();
     }
 
     //Clears on barcode
     public void clearOneBarcode(View v){
-        String currentBarcodes = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getString("BARCODES", "");
-        if(currentBarcodes.lastIndexOf('\n') > 0){  //If there's a new line character
-            //If it's the last character and there's more than one code
-            if(currentBarcodes.lastIndexOf('\n') == currentBarcodes.length() - 1){
-                try {
-                    currentBarcodes = currentBarcodes.substring(0, currentBarcodes.lastIndexOf('\n'));           //Erase the first new line
-                    currentBarcodes = currentBarcodes.substring(0, currentBarcodes.lastIndexOf('\n')) + '\n';    //Erase a the next new line and add a new space
-                } catch (Exception e){
-                    clearBarcodes(v);
-                }
-            } else {
-                currentBarcodes = currentBarcodes.substring(0,currentBarcodes.lastIndexOf('\n')) + '\n';    //Erase up to it and add a new space
-            }
-            e1.setText(currentBarcodes);
-            //Save the new string
-            SharedPreferences.Editor editor = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).edit();
-            editor.putString("BARCODES", currentBarcodes);
-            editor.apply();
-            setTotalCount(currentBarcodes);
-        } else {
-            clearBarcodes(v);
+        if(getBarcodeNumber() >= 1) {
+            //Get the existing barcodes
+            SharedPreferences prefs = this.getSharedPreferences("BARCODESPREFS", MODE_PRIVATE);
+            String barcodeString = prefs.getString("BARCODESLISTPREFS", "");
+            List<String> barcodeSet = new ArrayList<>(Arrays.asList(TextUtils.split(barcodeString, ",")));
+
+            barcodeSet.remove(barcodeSet.size() - 1);
+            SharedPreferences.Editor edit=prefs.edit();
+
+            //Save them to shared prefs
+            edit.putString("BARCODESLISTPREFS", TextUtils.join(",", barcodeSet));
+            edit.commit();
+
+            //Update total codes
+            setTotalCount(barcodeSet.size());
+
+            refreshBarcodeList();
         }
     }
 }

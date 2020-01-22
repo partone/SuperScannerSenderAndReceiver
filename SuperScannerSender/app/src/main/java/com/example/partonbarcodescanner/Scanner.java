@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -31,6 +32,11 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 //Most of this code is adapted from the Google Vision API example
@@ -171,30 +177,30 @@ public class Scanner extends AppCompatActivity {
         erase.setEnabled(false);
         String scanPreResult = scannedCode.getText().toString();
 
-
         //Add leading zero if ignored
         //if (scanPreResult.length() < 13) {
         //    scanPreResult = "0" + scanPreResult;
         //}
         //Add scan result to shared pref
         final String scanResult = scanPreResult;
-        setAndReturnBarcodeSharedPref(scanResult);
+        addToBarcodeSharedPref(scanResult);
 
         save.setBackgroundColor(Color.LTGRAY);
         scannedCode.setText("The barcode will appear here");
     }
 
     //Append to the barcode sharedpref barcode string and also returns it
-    private String setAndReturnBarcodeSharedPref(String scanResult){
-        String currentBarcodes = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).getString("BARCODES", "");
-        currentBarcodes = currentBarcodes + scanResult;      //Append the new barcode
-        currentBarcodes = currentBarcodes.replaceAll("(?m)^[ \t]*\r?\n", "");   //Get rid of any blank new lines
-        currentBarcodes = currentBarcodes + "\n";       //Add a new line at the end
-        //Save the new string
-        SharedPreferences.Editor editor = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).edit();
-        editor.putString("BARCODES", currentBarcodes);
-        editor.apply();
-        Log.i("Yeah2", currentBarcodes);
-        return currentBarcodes;
+    private void addToBarcodeSharedPref(String scanResult){
+        //Get the existing barcodes
+        SharedPreferences prefs = this.getSharedPreferences("BARCODESPREFS", MODE_PRIVATE);
+        String barcodeString = prefs.getString("BARCODESLISTPREFS", "");
+        List<String> barcodeSet = new ArrayList<>(Arrays.asList(TextUtils.split(barcodeString, ",")));
+
+        //Add the new one
+        barcodeSet.add(scanResult);
+        SharedPreferences.Editor edit=prefs.edit();
+        //Save them to shared prefs
+        edit.putString("BARCODESLISTPREFS", TextUtils.join(",", barcodeSet));
+        edit.commit();
     }
 }
