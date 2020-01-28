@@ -175,8 +175,12 @@ public class MainActivity extends AppCompatActivity {
                         //Get the shared prefs
                         SharedPreferences.Editor editor = getSharedPreferences("BARCODESPREFS", MODE_PRIVATE).edit();
                         //And erase them
-                        editor.putString("BARCODES", "");
+                        editor.putString("BARCODESLISTPREFS", "");
                         editor.apply();
+                        //Update total codes
+                        setTotalCount(0);
+                        refreshBarcodeList();
+
 
                         //Clear the old zone
                         e2.setText("");
